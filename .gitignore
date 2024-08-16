@@ -1,0 +1,17 @@
+video
+/ava_made/Dataset/choose_frames
+/ava_made/Dataset/choose_frames_all
+/ava_made/Dataset/choose_frames_middle
+/ava_made/Dataset/frames
+/ava_made/Dataset/rawframes
+/ava_made/Dataset/output
+/ava_made/Dataset/video_crop
+/ava_made/Dataset/videos
+/ava_made/yolovdeepsort/v10
+/ava_made/yolovdeepsort/yolov5
+/ava_made/yolovdeepsort/deep_sort_pytorch
+/mmaction2/Checkpionts
+ava_made/yolovdeepsort/yolov10s.pt
+ava_made/yolovdeepsort/yolov8n.pt
+ava_made/yolov8n.pt
+ava_made/yolov10s.pt
