@@ -1,0 +1,285 @@
+2024-08-16 14:06:59,334 - mmaction - INFO - Environment info:
+------------------------------------------------------------
+sys.platform: win32
+Python: 3.9.19 (main, May  6 2024, 20:12:36) [MSC v.1916 64 bit (AMD64)]
+CUDA available: True
+GPU 0: NVIDIA GeForce RTX 4060 Ti
+CUDA_HOME: C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6
+NVCC: Not Available
+GCC: n/a
+PyTorch: 1.11.0+cu113
+PyTorch compiling details: PyTorch built with:
+  - C++ Version: 199711
+  - MSVC 192829337
+  - Intel(R) Math Kernel Library Version 2020.0.2 Product Build 20200624 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.5.2 (Git Hash a9302535553c73243c632ad3c4c80beec3d19a1e)
+  - OpenMP 2019
+  - LAPACK is enabled (usually provided by MKL)
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.3
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 8.2
+  - Magma 2.5.4
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.3, CUDNN_VERSION=8.2.0, CXX_COMPILER=C:/actions-runner/_work/pytorch/pytorch/builder/windows/tmp_bin/sccache-cl.exe, CXX_FLAGS=/DWIN32 /D_WINDOWS /GR /EHsc /w /bigobj -DUSE_PTHREADPOOL -openmp:experimental -IC:/actions-runner/_work/pytorch/pytorch/builder/windows/mkl/include -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOCUPTI -DUSE_FBGEMM -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -DEDGE_PROFILER_USE_KINETO, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_VERSION=1.11.0, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=OFF, USE_MPI=OFF, USE_NCCL=OFF, USE_NNPACK=OFF, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+TorchVision: 0.12.0+cu113
+OpenCV: 4.10.0
+MMCV: 1.4.0
+MMCV Compiler: MSVC 192930137
+MMCV CUDA Compiler: 11.3
+MMAction2: 0.20.0+d686c8e
+------------------------------------------------------------
+
+2024-08-16 14:06:59,335 - mmaction - INFO - Distributed training: False
+2024-08-16 14:07:00,194 - mmaction - INFO - Config: model = dict(
+    type='FastRCNN',
+    backbone=dict(
+        type='ResNet3dSlowFast',
+        pretrained=None,
+        resample_rate=8,
+        speed_ratio=8,
+        channel_ratio=8,
+        slow_pathway=dict(
+            type='resnet3d',
+            depth=50,
+            pretrained=None,
+            lateral=True,
+            conv1_kernel=(1, 7, 7),
+            dilations=(1, 1, 1, 1),
+            conv1_stride_t=1,
+            pool1_stride_t=1,
+            inflate=(0, 0, 1, 1),
+            spatial_strides=(1, 2, 2, 1)),
+        fast_pathway=dict(
+            type='resnet3d',
+            depth=50,
+            pretrained=None,
+            lateral=False,
+            base_channels=8,
+            conv1_kernel=(5, 7, 7),
+            conv1_stride_t=1,
+            pool1_stride_t=1,
+            spatial_strides=(1, 2, 2, 1))),
+    roi_head=dict(
+        type='AVARoIHead',
+        bbox_roi_extractor=dict(
+            type='SingleRoIExtractor3D',
+            roi_layer_type='RoIAlign',
+            output_size=8,
+            with_temporal_pool=True),
+        bbox_head=dict(
+            type='BBoxHeadAVA',
+            in_channels=2304,
+            num_classes=81,
+            multilabel=True,
+            dropout_ratio=0.5)),
+    train_cfg=dict(
+        rcnn=dict(
+            assigner=dict(
+                type='MaxIoUAssignerAVA',
+                pos_iou_thr=0.9,
+                neg_iou_thr=0.9,
+                min_pos_iou=0.9),
+            sampler=dict(
+                type='RandomSampler',
+                num=32,
+                pos_fraction=1,
+                neg_pos_ub=-1,
+                add_gt_as_proposals=True),
+            pos_weight=1.0,
+            debug=False)),
+    test_cfg=dict(rcnn=dict(action_thr=0.002)))
+dataset_type = 'AVADataset'
+data_root = 'C:/Users/Administrator/Desktop/ava_made/Dataset/frames'
+anno_root = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations'
+ann_file_train = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/train.csv'
+ann_file_val = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val.csv'
+exclude_file_train = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/train_excluded_timestamps.csv'
+exclude_file_val = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val_excluded_timestamps.csv'
+label_file = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/action_list.pbtxt'
+proposal_file_train = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_train.pkl'
+proposal_file_val = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_val.pkl'
+img_norm_cfg = dict(
+    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_bgr=False)
+train_pipeline = [
+    dict(type='SampleAVAFrames', clip_len=32, frame_interval=2),
+    dict(type='RawFrameDecode'),
+    dict(type='RandomRescale', scale_range=(256, 320)),
+    dict(type='RandomCrop', size=256),
+    dict(type='Flip', flip_ratio=0.5),
+    dict(
+        type='Normalize',
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375],
+        to_bgr=False),
+    dict(type='FormatShape', input_format='NCTHW', collapse=True),
+    dict(type='Rename', mapping=dict(imgs='img')),
+    dict(type='ToTensor', keys=['img', 'proposals', 'gt_bboxes', 'gt_labels']),
+    dict(
+        type='ToDataContainer',
+        fields=[
+            dict(key=['proposals', 'gt_bboxes', 'gt_labels'], stack=False)
+        ]),
+    dict(
+        type='Collect',
+        keys=['img', 'proposals', 'gt_bboxes', 'gt_labels'],
+        meta_keys=['scores', 'entity_ids'])
+]
+val_pipeline = [
+    dict(type='SampleAVAFrames', clip_len=32, frame_interval=2),
+    dict(type='RawFrameDecode'),
+    dict(type='Resize', scale=(-1, 256)),
+    dict(
+        type='Normalize',
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375],
+        to_bgr=False),
+    dict(type='FormatShape', input_format='NCTHW', collapse=True),
+    dict(type='Rename', mapping=dict(imgs='img')),
+    dict(type='ToTensor', keys=['img', 'proposals']),
+    dict(type='ToDataContainer', fields=[dict(key='proposals', stack=False)]),
+    dict(
+        type='Collect',
+        keys=['img', 'proposals'],
+        meta_keys=['scores', 'img_shape'],
+        nested=True)
+]
+data = dict(
+    videos_per_gpu=5,
+    workers_per_gpu=2,
+    val_dataloader=dict(videos_per_gpu=1),
+    test_dataloader=dict(videos_per_gpu=1),
+    train=dict(
+        type='AVADataset',
+        ann_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/train.csv',
+        exclude_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/train_excluded_timestamps.csv',
+        pipeline=[
+            dict(type='SampleAVAFrames', clip_len=32, frame_interval=2),
+            dict(type='RawFrameDecode'),
+            dict(type='RandomRescale', scale_range=(256, 320)),
+            dict(type='RandomCrop', size=256),
+            dict(type='Flip', flip_ratio=0.5),
+            dict(
+                type='Normalize',
+                mean=[123.675, 116.28, 103.53],
+                std=[58.395, 57.12, 57.375],
+                to_bgr=False),
+            dict(type='FormatShape', input_format='NCTHW', collapse=True),
+            dict(type='Rename', mapping=dict(imgs='img')),
+            dict(
+                type='ToTensor',
+                keys=['img', 'proposals', 'gt_bboxes', 'gt_labels']),
+            dict(
+                type='ToDataContainer',
+                fields=[
+                    dict(
+                        key=['proposals', 'gt_bboxes', 'gt_labels'],
+                        stack=False)
+                ]),
+            dict(
+                type='Collect',
+                keys=['img', 'proposals', 'gt_bboxes', 'gt_labels'],
+                meta_keys=['scores', 'entity_ids'])
+        ],
+        label_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/action_list.pbtxt',
+        proposal_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_train.pkl',
+        person_det_score_thr=0.9,
+        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/frames',
+        start_index=1),
+    val=dict(
+        type='AVADataset',
+        ann_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val.csv',
+        exclude_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val_excluded_timestamps.csv',
+        pipeline=[
+            dict(type='SampleAVAFrames', clip_len=32, frame_interval=2),
+            dict(type='RawFrameDecode'),
+            dict(type='Resize', scale=(-1, 256)),
+            dict(
+                type='Normalize',
+                mean=[123.675, 116.28, 103.53],
+                std=[58.395, 57.12, 57.375],
+                to_bgr=False),
+            dict(type='FormatShape', input_format='NCTHW', collapse=True),
+            dict(type='Rename', mapping=dict(imgs='img')),
+            dict(type='ToTensor', keys=['img', 'proposals']),
+            dict(
+                type='ToDataContainer',
+                fields=[dict(key='proposals', stack=False)]),
+            dict(
+                type='Collect',
+                keys=['img', 'proposals'],
+                meta_keys=['scores', 'img_shape'],
+                nested=True)
+        ],
+        label_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/action_list.pbtxt',
+        proposal_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_val.pkl',
+        person_det_score_thr=0.9,
+        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/frames',
+        start_index=1),
+    test=dict(
+        type='AVADataset',
+        ann_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val.csv',
+        exclude_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val_excluded_timestamps.csv',
+        pipeline=[
+            dict(type='SampleAVAFrames', clip_len=32, frame_interval=2),
+            dict(type='RawFrameDecode'),
+            dict(type='Resize', scale=(-1, 256)),
+            dict(
+                type='Normalize',
+                mean=[123.675, 116.28, 103.53],
+                std=[58.395, 57.12, 57.375],
+                to_bgr=False),
+            dict(type='FormatShape', input_format='NCTHW', collapse=True),
+            dict(type='Rename', mapping=dict(imgs='img')),
+            dict(type='ToTensor', keys=['img', 'proposals']),
+            dict(
+                type='ToDataContainer',
+                fields=[dict(key='proposals', stack=False)]),
+            dict(
+                type='Collect',
+                keys=['img', 'proposals'],
+                meta_keys=['scores', 'img_shape'],
+                nested=True)
+        ],
+        label_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/action_list.pbtxt',
+        proposal_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_val.pkl',
+        person_det_score_thr=0.9,
+        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/frames',
+        start_index=1))
+optimizer = dict(type='SGD', lr=0.0125, momentum=0.9, weight_decay=1e-05)
+optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
+lr_config = dict(
+    policy='step',
+    step=[10, 15],
+    warmup='linear',
+    warmup_by_epoch=True,
+    warmup_iters=5,
+    warmup_ratio=0.1)
+total_epochs = 100
+checkpoint_config = dict(interval=1)
+workflow = [('train', 1)]
+evaluation = dict(interval=1, save_best='mAP@0.5IOU')
+log_config = dict(interval=20, hooks=[dict(type='TextLoggerHook')])
+dist_params = dict(backend='nccl')
+log_level = 'INFO'
+work_dir = './work_dirs/ava/slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb'
+load_from = 'https://download.openmmlab.com/mmaction/recognition/slowfast/slowfast_r50_4x16x1_256e_kinetics400_rgb/slowfast_r50_4x16x1_256e_kinetics400_rgb_20200704-bcde7ed7.pth'
+resume_from = None
+find_unused_parameters = False
+gpu_ids = range(0, 1)
+omnisource = False
+module_hooks = []
+
+2024-08-16 14:07:00,219 - mmaction - INFO - Set random seed to 1357021243, deterministic: False
