@@ -228,6 +228,13 @@ class AVADataset(BaseDataset):
         with open(self.ann_file, 'r') as fin:
             for line in fin:
                 line_split = line.strip().split(',')
+                
+                # Debug: Print the line and its length
+                print(f'Line: {line}, Length: {len(line_split)}')
+                
+                if len(line_split) < 8:
+                    print(f'Error: Insufficient data in line: {line}')
+                    continue
 
                 label = int(line_split[6])
                 if self.custom_classes is not None:
@@ -242,7 +249,7 @@ class AVADataset(BaseDataset):
                 entity_box = np.array(list(map(float, line_split[2:6])))
                 entity_id = int(line_split[7])
                 shot_info = (0, (self.timestamp_end - self.timestamp_start) *
-                             self._FPS)
+                            self._FPS)
 
                 video_info = dict(
                     video_id=video_id,
@@ -273,6 +280,7 @@ class AVADataset(BaseDataset):
             video_infos.append(video_info)
 
         return video_infos
+
 
     def prepare_train_frames(self, idx):
         """Prepare the frames for training given the index."""

@@ -1,5 +1,5 @@
 import csv
- 
+
 train_temp_path = './train_temp.csv'
 train_temp = []
 
@@ -8,7 +8,7 @@ with open(train_temp_path) as csvfile:
     csv_reader = csv.reader(csvfile)  # 使用csv.reader读取csvfile中的文件
     for row in csv_reader:           
         train_temp.append(row)
-     
+
 def update_train_temp(videoName,index,maxId):
     for index2 in range(len(train_temp)):
         data = train_temp[index2]
@@ -47,9 +47,6 @@ def update_train_temp(videoName,index,maxId):
                 if abs(x1-xTT1)<0.005 and abs(y1-yTT1)<0.005 and abs(x2-xTT2)<0.005 and abs(y2-yTT2)<0.005:
                     continue
                 train_temp[index2][-1] = int(train_temp[index2][-1]) + 1
-        
-        
-                
 temp = train_temp
 
 # dicts存放修正后的ava_train_temp
@@ -79,4 +76,4 @@ for index in range(len(train_temp)):
 with open('./annotations/train.csv',"w") as csvfile: 
     writer = csv.writer(csvfile)
     writer.writerows(train_temp)
-   
+

@@ -3,8 +3,8 @@ import os
 import json
 import pickle
 
-# 传参 labelPath 是 yolov5 检测结果的位置，需要获取 0（0 代表人）的四个坐标值，还需要检测概率
-# ../yolov5/runs/detect/exp/labels
+# 传参 labelPath 是 yolov10 检测结果的位置，需要获取 0（0 代表人）的四个坐标值，还需要检测概率
+# ../v10/runs/detect/exp/labels
 labelPath = sys.argv[1]
 
 # 传参 保存为 pkl 的地址，这是像 ava 数据集对齐
@@ -41,7 +41,7 @@ for root, dirs, files in os.walk(labelPath):
                     # 只要人的信息
                     j = i.split(' ')
                     if j[0] == '0':
-                        # 由于 yolov5 的检测结果是 xywh
+                        # 由于 yolov10 的检测结果是 xywh
                         # 要将 xywh 转化成 xyxy
                         y = j
                         y[1] = float(j[1]) - float(j[3]) / 2  # top left x

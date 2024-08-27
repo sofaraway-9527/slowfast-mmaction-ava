@@ -57,7 +57,7 @@ model = dict(
             debug=False)),
     test_cfg=dict(rcnn=dict(action_thr=0.002)))
 dataset_type = 'AVADataset'
-data_root = 'C:/Users/Administrator/Desktop/ava_made/Dataset/frames'
+data_root = 'C:/Users/Administrator/Desktop/ava_made/Dataset/rawframes'
 anno_root = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations'
 ann_file_train = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/train.csv'
 ann_file_val = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val.csv'
@@ -155,7 +155,7 @@ data = dict(
         proposal_file=
         'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_train.pkl',
         person_det_score_thr=0.9,
-        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/frames',
+        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/rawframes',
         start_index=1),
     val=dict(
         type='AVADataset',
@@ -189,7 +189,7 @@ data = dict(
         proposal_file=
         'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_val.pkl',
         person_det_score_thr=0.9,
-        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/frames',
+        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/rawframes',
         start_index=1),
     test=dict(
         type='AVADataset',
@@ -223,7 +223,7 @@ data = dict(
         proposal_file=
         'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_val.pkl',
         person_det_score_thr=0.9,
-        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/frames',
+        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/rawframes',
         start_index=1))
 optimizer = dict(type='SGD', lr=0.0125, momentum=0.9, weight_decay=1e-05)
 optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))

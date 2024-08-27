@@ -1,0 +1,869 @@
+2024-08-19 17:24:37,923 - mmaction - INFO - Environment info:
+------------------------------------------------------------
+sys.platform: win32
+Python: 3.9.19 (main, May  6 2024, 20:12:36) [MSC v.1916 64 bit (AMD64)]
+CUDA available: True
+GPU 0: NVIDIA GeForce RTX 4060 Ti
+CUDA_HOME: D:\Users\Administrator\anaconda3\pkgs\cudatoolkit-11.3.1-h59b6b97_2
+NVCC: Not Available
+MSVC: 用于 x64 的 Microsoft (R) C/C++ 优化编译器 19.40.33811 版
+GCC: n/a
+PyTorch: 1.11.0+cu113
+PyTorch compiling details: PyTorch built with:
+  - C++ Version: 199711
+  - MSVC 192829337
+  - Intel(R) Math Kernel Library Version 2020.0.2 Product Build 20200624 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.5.2 (Git Hash a9302535553c73243c632ad3c4c80beec3d19a1e)
+  - OpenMP 2019
+  - LAPACK is enabled (usually provided by MKL)
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.3
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 8.2
+  - Magma 2.5.4
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.3, CUDNN_VERSION=8.2.0, CXX_COMPILER=C:/actions-runner/_work/pytorch/pytorch/builder/windows/tmp_bin/sccache-cl.exe, CXX_FLAGS=/DWIN32 /D_WINDOWS /GR /EHsc /w /bigobj -DUSE_PTHREADPOOL -openmp:experimental -IC:/actions-runner/_work/pytorch/pytorch/builder/windows/mkl/include -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOCUPTI -DUSE_FBGEMM -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -DEDGE_PROFILER_USE_KINETO, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_VERSION=1.11.0, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=OFF, USE_MPI=OFF, USE_NCCL=OFF, USE_NNPACK=OFF, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+TorchVision: 0.12.0+cu113
+OpenCV: 4.10.0
+MMCV: 1.6.0
+MMCV Compiler: MSVC 192930140
+MMCV CUDA Compiler: 11.3
+MMAction2: 0.20.0+d686c8e
+------------------------------------------------------------
+
+2024-08-19 17:24:37,924 - mmaction - INFO - Distributed training: False
+2024-08-19 17:24:38,812 - mmaction - INFO - Config: model = dict(
+    type='FastRCNN',
+    backbone=dict(
+        type='ResNet3dSlowFast',
+        pretrained=None,
+        resample_rate=8,
+        speed_ratio=8,
+        channel_ratio=8,
+        slow_pathway=dict(
+            type='resnet3d',
+            depth=50,
+            pretrained=None,
+            lateral=True,
+            conv1_kernel=(1, 7, 7),
+            dilations=(1, 1, 1, 1),
+            conv1_stride_t=1,
+            pool1_stride_t=1,
+            inflate=(0, 0, 1, 1),
+            spatial_strides=(1, 2, 2, 1)),
+        fast_pathway=dict(
+            type='resnet3d',
+            depth=50,
+            pretrained=None,
+            lateral=False,
+            base_channels=8,
+            conv1_kernel=(5, 7, 7),
+            conv1_stride_t=1,
+            pool1_stride_t=1,
+            spatial_strides=(1, 2, 2, 1))),
+    roi_head=dict(
+        type='AVARoIHead',
+        bbox_roi_extractor=dict(
+            type='SingleRoIExtractor3D',
+            roi_layer_type='RoIAlign',
+            output_size=8,
+            with_temporal_pool=True),
+        bbox_head=dict(
+            type='BBoxHeadAVA',
+            in_channels=2304,
+            num_classes=81,
+            multilabel=True,
+            dropout_ratio=0.5)),
+    train_cfg=dict(
+        rcnn=dict(
+            assigner=dict(
+                type='MaxIoUAssignerAVA',
+                pos_iou_thr=0.9,
+                neg_iou_thr=0.9,
+                min_pos_iou=0.9),
+            sampler=dict(
+                type='RandomSampler',
+                num=32,
+                pos_fraction=1,
+                neg_pos_ub=-1,
+                add_gt_as_proposals=True),
+            pos_weight=1.0,
+            debug=False)),
+    test_cfg=dict(rcnn=dict(action_thr=0.002)))
+dataset_type = 'AVADataset'
+data_root = 'C:/Users/Administrator/Desktop/ava_made/Dataset/rawframes'
+anno_root = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations'
+ann_file_train = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/train.csv'
+ann_file_val = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val.csv'
+exclude_file_train = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/train_excluded_timestamps.csv'
+exclude_file_val = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val_excluded_timestamps.csv'
+label_file = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/action_list.pbtxt'
+proposal_file_train = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_train.pkl'
+proposal_file_val = 'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_val.pkl'
+img_norm_cfg = dict(
+    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_bgr=False)
+train_pipeline = [
+    dict(type='SampleAVAFrames', clip_len=32, frame_interval=2),
+    dict(type='RawFrameDecode'),
+    dict(type='RandomRescale', scale_range=(256, 320)),
+    dict(type='RandomCrop', size=256),
+    dict(type='Flip', flip_ratio=0.5),
+    dict(
+        type='Normalize',
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375],
+        to_bgr=False),
+    dict(type='FormatShape', input_format='NCTHW', collapse=True),
+    dict(type='Rename', mapping=dict(imgs='img')),
+    dict(type='ToTensor', keys=['img', 'proposals', 'gt_bboxes', 'gt_labels']),
+    dict(
+        type='ToDataContainer',
+        fields=[
+            dict(key=['proposals', 'gt_bboxes', 'gt_labels'], stack=False)
+        ]),
+    dict(
+        type='Collect',
+        keys=['img', 'proposals', 'gt_bboxes', 'gt_labels'],
+        meta_keys=['scores', 'entity_ids'])
+]
+val_pipeline = [
+    dict(type='SampleAVAFrames', clip_len=32, frame_interval=2),
+    dict(type='RawFrameDecode'),
+    dict(type='Resize', scale=(-1, 256)),
+    dict(
+        type='Normalize',
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375],
+        to_bgr=False),
+    dict(type='FormatShape', input_format='NCTHW', collapse=True),
+    dict(type='Rename', mapping=dict(imgs='img')),
+    dict(type='ToTensor', keys=['img', 'proposals']),
+    dict(type='ToDataContainer', fields=[dict(key='proposals', stack=False)]),
+    dict(
+        type='Collect',
+        keys=['img', 'proposals'],
+        meta_keys=['scores', 'img_shape'],
+        nested=True)
+]
+data = dict(
+    videos_per_gpu=5,
+    workers_per_gpu=2,
+    val_dataloader=dict(videos_per_gpu=1),
+    test_dataloader=dict(videos_per_gpu=1),
+    train=dict(
+        type='AVADataset',
+        ann_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/train.csv',
+        exclude_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/train_excluded_timestamps.csv',
+        pipeline=[
+            dict(type='SampleAVAFrames', clip_len=32, frame_interval=2),
+            dict(type='RawFrameDecode'),
+            dict(type='RandomRescale', scale_range=(256, 320)),
+            dict(type='RandomCrop', size=256),
+            dict(type='Flip', flip_ratio=0.5),
+            dict(
+                type='Normalize',
+                mean=[123.675, 116.28, 103.53],
+                std=[58.395, 57.12, 57.375],
+                to_bgr=False),
+            dict(type='FormatShape', input_format='NCTHW', collapse=True),
+            dict(type='Rename', mapping=dict(imgs='img')),
+            dict(
+                type='ToTensor',
+                keys=['img', 'proposals', 'gt_bboxes', 'gt_labels']),
+            dict(
+                type='ToDataContainer',
+                fields=[
+                    dict(
+                        key=['proposals', 'gt_bboxes', 'gt_labels'],
+                        stack=False)
+                ]),
+            dict(
+                type='Collect',
+                keys=['img', 'proposals', 'gt_bboxes', 'gt_labels'],
+                meta_keys=['scores', 'entity_ids'])
+        ],
+        label_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/action_list.pbtxt',
+        proposal_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_train.pkl',
+        person_det_score_thr=0.9,
+        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/rawframes',
+        start_index=1),
+    val=dict(
+        type='AVADataset',
+        ann_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val.csv',
+        exclude_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val_excluded_timestamps.csv',
+        pipeline=[
+            dict(type='SampleAVAFrames', clip_len=32, frame_interval=2),
+            dict(type='RawFrameDecode'),
+            dict(type='Resize', scale=(-1, 256)),
+            dict(
+                type='Normalize',
+                mean=[123.675, 116.28, 103.53],
+                std=[58.395, 57.12, 57.375],
+                to_bgr=False),
+            dict(type='FormatShape', input_format='NCTHW', collapse=True),
+            dict(type='Rename', mapping=dict(imgs='img')),
+            dict(type='ToTensor', keys=['img', 'proposals']),
+            dict(
+                type='ToDataContainer',
+                fields=[dict(key='proposals', stack=False)]),
+            dict(
+                type='Collect',
+                keys=['img', 'proposals'],
+                meta_keys=['scores', 'img_shape'],
+                nested=True)
+        ],
+        label_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/action_list.pbtxt',
+        proposal_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_val.pkl',
+        person_det_score_thr=0.9,
+        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/rawframes',
+        start_index=1),
+    test=dict(
+        type='AVADataset',
+        ann_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val.csv',
+        exclude_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/val_excluded_timestamps.csv',
+        pipeline=[
+            dict(type='SampleAVAFrames', clip_len=32, frame_interval=2),
+            dict(type='RawFrameDecode'),
+            dict(type='Resize', scale=(-1, 256)),
+            dict(
+                type='Normalize',
+                mean=[123.675, 116.28, 103.53],
+                std=[58.395, 57.12, 57.375],
+                to_bgr=False),
+            dict(type='FormatShape', input_format='NCTHW', collapse=True),
+            dict(type='Rename', mapping=dict(imgs='img')),
+            dict(type='ToTensor', keys=['img', 'proposals']),
+            dict(
+                type='ToDataContainer',
+                fields=[dict(key='proposals', stack=False)]),
+            dict(
+                type='Collect',
+                keys=['img', 'proposals'],
+                meta_keys=['scores', 'img_shape'],
+                nested=True)
+        ],
+        label_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/action_list.pbtxt',
+        proposal_file=
+        'C:/Users/Administrator/Desktop/ava_made/Dataset/annotations/dense_proposals_val.pkl',
+        person_det_score_thr=0.9,
+        data_prefix='C:/Users/Administrator/Desktop/ava_made/Dataset/rawframes',
+        start_index=1))
+optimizer = dict(type='SGD', lr=0.0125, momentum=0.9, weight_decay=1e-05)
+optimizer_config = dict(grad_clip=dict(max_norm=40, norm_type=2))
+lr_config = dict(
+    policy='step',
+    step=[10, 15],
+    warmup='linear',
+    warmup_by_epoch=True,
+    warmup_iters=5,
+    warmup_ratio=0.1)
+total_epochs = 100
+checkpoint_config = dict(interval=1)
+workflow = [('train', 1)]
+evaluation = dict(interval=1, save_best='mAP@0.5IOU')
+log_config = dict(interval=20, hooks=[dict(type='TextLoggerHook')])
+dist_params = dict(backend='nccl')
+log_level = 'INFO'
+work_dir = './work_dirs/ava/slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb'
+load_from = 'https://download.openmmlab.com/mmaction/recognition/slowfast/slowfast_r50_4x16x1_256e_kinetics400_rgb/slowfast_r50_4x16x1_256e_kinetics400_rgb_20200704-bcde7ed7.pth'
+resume_from = None
+find_unused_parameters = False
+gpu_ids = range(0, 1)
+omnisource = False
+module_hooks = []
+
+2024-08-19 17:24:38,824 - mmaction - INFO - Set random seed to 979038313, deterministic: False
+2024-08-19 17:24:39,140 - mmaction - INFO - 43 out of 43 frames are valid.
+2024-08-19 17:24:40,127 - mmaction - INFO - load checkpoint from http path: https://download.openmmlab.com/mmaction/recognition/slowfast/slowfast_r50_4x16x1_256e_kinetics400_rgb/slowfast_r50_4x16x1_256e_kinetics400_rgb_20200704-bcde7ed7.pth
+2024-08-19 17:24:40,214 - mmaction - WARNING - The model and loaded state dict do not match exactly
+
+unexpected key in source state_dict: cls_head.fc_cls.weight, cls_head.fc_cls.bias
+
+missing keys in source state_dict: roi_head.bbox_head.fc_cls.weight, roi_head.bbox_head.fc_cls.bias
+
+2024-08-19 17:24:40,219 - mmaction - INFO - Start running, host: Administrator@king-9527, work_dir: C:\Users\Administrator\Desktop\mmaction2\work_dirs\ava\slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb
+2024-08-19 17:24:40,220 - mmaction - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) StepLrUpdaterHook                  
+(NORMAL      ) CheckpointHook                     
+(NORMAL      ) EvalHook                           
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) StepLrUpdaterHook                  
+(NORMAL      ) EvalHook                           
+(LOW         ) IterTimerHook                      
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) StepLrUpdaterHook                  
+(NORMAL      ) EvalHook                           
+(LOW         ) IterTimerHook                      
+ -------------------- 
+after_train_iter:
+(ABOVE_NORMAL) OptimizerHook                      
+(NORMAL      ) CheckpointHook                     
+(NORMAL      ) EvalHook                           
+(LOW         ) IterTimerHook                      
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) CheckpointHook                     
+(NORMAL      ) EvalHook                           
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+before_val_epoch:
+(LOW         ) IterTimerHook                      
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+before_val_iter:
+(LOW         ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(LOW         ) IterTimerHook                      
+ -------------------- 
+after_val_epoch:
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+after_run:
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+2024-08-19 17:24:40,221 - mmaction - INFO - workflow: [('train', 1)], max: 100 epochs
+2024-08-19 17:24:40,221 - mmaction - INFO - Checkpoints will be saved to C:\Users\Administrator\Desktop\mmaction2\work_dirs\ava\slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb by HardDiskBackend.
+2024-08-19 17:24:56,786 - mmaction - INFO - Saving checkpoint at 1 epochs
+2024-08-19 17:25:05,637 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:25:05,672 - mmaction - INFO - 
+mAP@0.5IOU	 0.2609
+2024-08-19 17:25:06,401 - mmaction - INFO - Now best checkpoint is saved as best_mAP@0.5IOU_epoch_1.pth.
+2024-08-19 17:25:06,402 - mmaction - INFO - Best mAP@0.5IOU is 0.2609 at 1 epoch.
+2024-08-19 17:25:06,402 - mmaction - INFO - Epoch(val) [1][43]	mAP@0.5IOU: 0.2609
+2024-08-19 17:25:19,472 - mmaction - INFO - Saving checkpoint at 2 epochs
+2024-08-19 17:25:28,271 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:25:28,306 - mmaction - INFO - 
+mAP@0.5IOU	 0.2745
+2024-08-19 17:25:28,321 - mmaction - INFO - The previous best checkpoint C:\Users\Administrator\Desktop\mmaction2\work_dirs\ava\slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb\best_mAP@0.5IOU_epoch_1.pth was removed
+2024-08-19 17:25:29,061 - mmaction - INFO - Now best checkpoint is saved as best_mAP@0.5IOU_epoch_2.pth.
+2024-08-19 17:25:29,061 - mmaction - INFO - Best mAP@0.5IOU is 0.2745 at 2 epoch.
+2024-08-19 17:25:29,061 - mmaction - INFO - Epoch(val) [2][43]	mAP@0.5IOU: 0.2745
+2024-08-19 17:25:42,163 - mmaction - INFO - Saving checkpoint at 3 epochs
+2024-08-19 17:25:51,167 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:25:51,198 - mmaction - INFO - 
+mAP@0.5IOU	 0.3362
+2024-08-19 17:25:51,215 - mmaction - INFO - The previous best checkpoint C:\Users\Administrator\Desktop\mmaction2\work_dirs\ava\slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb\best_mAP@0.5IOU_epoch_2.pth was removed
+2024-08-19 17:25:51,965 - mmaction - INFO - Now best checkpoint is saved as best_mAP@0.5IOU_epoch_3.pth.
+2024-08-19 17:25:51,966 - mmaction - INFO - Best mAP@0.5IOU is 0.3362 at 3 epoch.
+2024-08-19 17:25:51,966 - mmaction - INFO - Epoch(val) [3][43]	mAP@0.5IOU: 0.3362
+2024-08-19 17:26:05,187 - mmaction - INFO - Saving checkpoint at 4 epochs
+2024-08-19 17:26:14,081 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:26:14,109 - mmaction - INFO - 
+mAP@0.5IOU	 0.3617
+2024-08-19 17:26:14,126 - mmaction - INFO - The previous best checkpoint C:\Users\Administrator\Desktop\mmaction2\work_dirs\ava\slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb\best_mAP@0.5IOU_epoch_3.pth was removed
+2024-08-19 17:26:14,957 - mmaction - INFO - Now best checkpoint is saved as best_mAP@0.5IOU_epoch_4.pth.
+2024-08-19 17:26:14,958 - mmaction - INFO - Best mAP@0.5IOU is 0.3617 at 4 epoch.
+2024-08-19 17:26:14,958 - mmaction - INFO - Epoch(val) [4][43]	mAP@0.5IOU: 0.3617
+2024-08-19 17:26:29,083 - mmaction - INFO - Saving checkpoint at 5 epochs
+2024-08-19 17:26:39,381 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:26:39,453 - mmaction - INFO - 
+mAP@0.5IOU	 0.3829
+2024-08-19 17:26:39,479 - mmaction - INFO - The previous best checkpoint C:\Users\Administrator\Desktop\mmaction2\work_dirs\ava\slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb\best_mAP@0.5IOU_epoch_4.pth was removed
+2024-08-19 17:26:40,887 - mmaction - INFO - Now best checkpoint is saved as best_mAP@0.5IOU_epoch_5.pth.
+2024-08-19 17:26:40,888 - mmaction - INFO - Best mAP@0.5IOU is 0.3829 at 5 epoch.
+2024-08-19 17:26:40,889 - mmaction - INFO - Epoch(val) [5][43]	mAP@0.5IOU: 0.3829
+2024-08-19 17:26:54,619 - mmaction - INFO - Saving checkpoint at 6 epochs
+2024-08-19 17:27:04,686 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:27:04,766 - mmaction - INFO - 
+mAP@0.5IOU	 0.3994
+2024-08-19 17:27:04,790 - mmaction - INFO - The previous best checkpoint C:\Users\Administrator\Desktop\mmaction2\work_dirs\ava\slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb\best_mAP@0.5IOU_epoch_5.pth was removed
+2024-08-19 17:27:06,138 - mmaction - INFO - Now best checkpoint is saved as best_mAP@0.5IOU_epoch_6.pth.
+2024-08-19 17:27:06,139 - mmaction - INFO - Best mAP@0.5IOU is 0.3994 at 6 epoch.
+2024-08-19 17:27:06,139 - mmaction - INFO - Epoch(val) [6][43]	mAP@0.5IOU: 0.3994
+2024-08-19 17:27:19,801 - mmaction - INFO - Saving checkpoint at 7 epochs
+2024-08-19 17:27:29,540 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:27:29,607 - mmaction - INFO - 
+mAP@0.5IOU	 0.3733
+2024-08-19 17:27:29,608 - mmaction - INFO - Epoch(val) [7][43]	mAP@0.5IOU: 0.3733
+2024-08-19 17:27:43,463 - mmaction - INFO - Saving checkpoint at 8 epochs
+2024-08-19 17:27:53,661 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:27:53,739 - mmaction - INFO - 
+mAP@0.5IOU	 0.4564
+2024-08-19 17:27:53,764 - mmaction - INFO - The previous best checkpoint C:\Users\Administrator\Desktop\mmaction2\work_dirs\ava\slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb\best_mAP@0.5IOU_epoch_6.pth was removed
+2024-08-19 17:27:55,125 - mmaction - INFO - Now best checkpoint is saved as best_mAP@0.5IOU_epoch_8.pth.
+2024-08-19 17:27:55,125 - mmaction - INFO - Best mAP@0.5IOU is 0.4564 at 8 epoch.
+2024-08-19 17:27:55,127 - mmaction - INFO - Epoch(val) [8][43]	mAP@0.5IOU: 0.4564
+2024-08-19 17:28:08,863 - mmaction - INFO - Saving checkpoint at 9 epochs
+2024-08-19 17:28:19,066 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:28:19,142 - mmaction - INFO - 
+mAP@0.5IOU	 0.4592
+2024-08-19 17:28:19,169 - mmaction - INFO - The previous best checkpoint C:\Users\Administrator\Desktop\mmaction2\work_dirs\ava\slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb\best_mAP@0.5IOU_epoch_8.pth was removed
+2024-08-19 17:28:20,365 - mmaction - INFO - Now best checkpoint is saved as best_mAP@0.5IOU_epoch_9.pth.
+2024-08-19 17:28:20,365 - mmaction - INFO - Best mAP@0.5IOU is 0.4592 at 9 epoch.
+2024-08-19 17:28:20,366 - mmaction - INFO - Epoch(val) [9][43]	mAP@0.5IOU: 0.4592
+2024-08-19 17:28:34,393 - mmaction - INFO - Saving checkpoint at 10 epochs
+2024-08-19 17:28:43,820 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:28:43,848 - mmaction - INFO - 
+mAP@0.5IOU	 0.4755
+2024-08-19 17:28:43,866 - mmaction - INFO - The previous best checkpoint C:\Users\Administrator\Desktop\mmaction2\work_dirs\ava\slowfast_kinetics_pretrained_r50_4x16x1_20e_ava_rgb\best_mAP@0.5IOU_epoch_9.pth was removed
+2024-08-19 17:28:44,559 - mmaction - INFO - Now best checkpoint is saved as best_mAP@0.5IOU_epoch_10.pth.
+2024-08-19 17:28:44,559 - mmaction - INFO - Best mAP@0.5IOU is 0.4755 at 10 epoch.
+2024-08-19 17:28:44,560 - mmaction - INFO - Epoch(val) [10][43]	mAP@0.5IOU: 0.4755
+2024-08-19 17:28:59,373 - mmaction - INFO - Saving checkpoint at 11 epochs
+2024-08-19 17:29:08,324 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:29:08,395 - mmaction - INFO - 
+mAP@0.5IOU	 0.4649
+2024-08-19 17:29:08,397 - mmaction - INFO - Epoch(val) [11][43]	mAP@0.5IOU: 0.4649
+2024-08-19 17:29:20,856 - mmaction - INFO - Saving checkpoint at 12 epochs
+2024-08-19 17:29:29,706 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:29:29,770 - mmaction - INFO - 
+mAP@0.5IOU	 0.4631
+2024-08-19 17:29:29,772 - mmaction - INFO - Epoch(val) [12][43]	mAP@0.5IOU: 0.4631
+2024-08-19 17:29:42,078 - mmaction - INFO - Saving checkpoint at 13 epochs
+2024-08-19 17:29:50,825 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:29:50,883 - mmaction - INFO - 
+mAP@0.5IOU	 0.4630
+2024-08-19 17:29:50,885 - mmaction - INFO - Epoch(val) [13][43]	mAP@0.5IOU: 0.4630
+2024-08-19 17:30:03,178 - mmaction - INFO - Saving checkpoint at 14 epochs
+2024-08-19 17:30:12,392 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:30:12,460 - mmaction - INFO - 
+mAP@0.5IOU	 0.4626
+2024-08-19 17:30:12,462 - mmaction - INFO - Epoch(val) [14][43]	mAP@0.5IOU: 0.4626
+2024-08-19 17:30:24,649 - mmaction - INFO - Saving checkpoint at 15 epochs
+2024-08-19 17:30:33,559 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:30:33,621 - mmaction - INFO - 
+mAP@0.5IOU	 0.4648
+2024-08-19 17:30:33,624 - mmaction - INFO - Epoch(val) [15][43]	mAP@0.5IOU: 0.4648
+2024-08-19 17:30:45,928 - mmaction - INFO - Saving checkpoint at 16 epochs
+2024-08-19 17:30:54,935 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:30:55,012 - mmaction - INFO - 
+mAP@0.5IOU	 0.4649
+2024-08-19 17:30:55,014 - mmaction - INFO - Epoch(val) [16][43]	mAP@0.5IOU: 0.4649
+2024-08-19 17:31:07,177 - mmaction - INFO - Saving checkpoint at 17 epochs
+2024-08-19 17:31:16,200 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:31:16,259 - mmaction - INFO - 
+mAP@0.5IOU	 0.4644
+2024-08-19 17:31:16,260 - mmaction - INFO - Epoch(val) [17][43]	mAP@0.5IOU: 0.4644
+2024-08-19 17:31:28,476 - mmaction - INFO - Saving checkpoint at 18 epochs
+2024-08-19 17:31:37,445 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:31:37,511 - mmaction - INFO - 
+mAP@0.5IOU	 0.4645
+2024-08-19 17:31:37,513 - mmaction - INFO - Epoch(val) [18][43]	mAP@0.5IOU: 0.4645
+2024-08-19 17:31:49,606 - mmaction - INFO - Saving checkpoint at 19 epochs
+2024-08-19 17:31:58,221 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:31:58,283 - mmaction - INFO - 
+mAP@0.5IOU	 0.4649
+2024-08-19 17:31:58,285 - mmaction - INFO - Epoch(val) [19][43]	mAP@0.5IOU: 0.4649
+2024-08-19 17:32:10,370 - mmaction - INFO - Saving checkpoint at 20 epochs
+2024-08-19 17:32:19,238 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:32:19,304 - mmaction - INFO - 
+mAP@0.5IOU	 0.4655
+2024-08-19 17:32:19,306 - mmaction - INFO - Epoch(val) [20][43]	mAP@0.5IOU: 0.4655
+2024-08-19 17:32:31,500 - mmaction - INFO - Saving checkpoint at 21 epochs
+2024-08-19 17:32:40,422 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:32:40,479 - mmaction - INFO - 
+mAP@0.5IOU	 0.4649
+2024-08-19 17:32:40,480 - mmaction - INFO - Epoch(val) [21][43]	mAP@0.5IOU: 0.4649
+2024-08-19 17:32:53,102 - mmaction - INFO - Saving checkpoint at 22 epochs
+2024-08-19 17:33:02,291 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:33:02,358 - mmaction - INFO - 
+mAP@0.5IOU	 0.4659
+2024-08-19 17:33:02,360 - mmaction - INFO - Epoch(val) [22][43]	mAP@0.5IOU: 0.4659
+2024-08-19 17:33:14,617 - mmaction - INFO - Saving checkpoint at 23 epochs
+2024-08-19 17:33:23,449 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:33:23,515 - mmaction - INFO - 
+mAP@0.5IOU	 0.4656
+2024-08-19 17:33:23,517 - mmaction - INFO - Epoch(val) [23][43]	mAP@0.5IOU: 0.4656
+2024-08-19 17:33:35,825 - mmaction - INFO - Saving checkpoint at 24 epochs
+2024-08-19 17:33:44,327 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:33:44,391 - mmaction - INFO - 
+mAP@0.5IOU	 0.4641
+2024-08-19 17:33:44,393 - mmaction - INFO - Epoch(val) [24][43]	mAP@0.5IOU: 0.4641
+2024-08-19 17:33:56,814 - mmaction - INFO - Saving checkpoint at 25 epochs
+2024-08-19 17:34:05,982 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:34:06,042 - mmaction - INFO - 
+mAP@0.5IOU	 0.4654
+2024-08-19 17:34:06,043 - mmaction - INFO - Epoch(val) [25][43]	mAP@0.5IOU: 0.4654
+2024-08-19 17:34:18,982 - mmaction - INFO - Saving checkpoint at 26 epochs
+2024-08-19 17:34:28,331 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:34:28,421 - mmaction - INFO - 
+mAP@0.5IOU	 0.4653
+2024-08-19 17:34:28,424 - mmaction - INFO - Epoch(val) [26][43]	mAP@0.5IOU: 0.4653
+2024-08-19 17:34:40,662 - mmaction - INFO - Saving checkpoint at 27 epochs
+2024-08-19 17:34:49,397 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:34:49,461 - mmaction - INFO - 
+mAP@0.5IOU	 0.4658
+2024-08-19 17:34:49,463 - mmaction - INFO - Epoch(val) [27][43]	mAP@0.5IOU: 0.4658
+2024-08-19 17:35:01,667 - mmaction - INFO - Saving checkpoint at 28 epochs
+2024-08-19 17:35:10,531 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:35:10,598 - mmaction - INFO - 
+mAP@0.5IOU	 0.4651
+2024-08-19 17:35:10,601 - mmaction - INFO - Epoch(val) [28][43]	mAP@0.5IOU: 0.4651
+2024-08-19 17:35:22,893 - mmaction - INFO - Saving checkpoint at 29 epochs
+2024-08-19 17:35:32,145 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:35:32,214 - mmaction - INFO - 
+mAP@0.5IOU	 0.4662
+2024-08-19 17:35:32,216 - mmaction - INFO - Epoch(val) [29][43]	mAP@0.5IOU: 0.4662
+2024-08-19 17:35:44,362 - mmaction - INFO - Saving checkpoint at 30 epochs
+2024-08-19 17:35:52,985 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:35:53,044 - mmaction - INFO - 
+mAP@0.5IOU	 0.4666
+2024-08-19 17:35:53,046 - mmaction - INFO - Epoch(val) [30][43]	mAP@0.5IOU: 0.4666
+2024-08-19 17:36:05,965 - mmaction - INFO - Saving checkpoint at 31 epochs
+2024-08-19 17:36:14,727 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:36:14,829 - mmaction - INFO - 
+mAP@0.5IOU	 0.4665
+2024-08-19 17:36:14,833 - mmaction - INFO - Epoch(val) [31][43]	mAP@0.5IOU: 0.4665
+2024-08-19 17:36:27,396 - mmaction - INFO - Saving checkpoint at 32 epochs
+2024-08-19 17:36:36,218 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:36:36,277 - mmaction - INFO - 
+mAP@0.5IOU	 0.4672
+2024-08-19 17:36:36,279 - mmaction - INFO - Epoch(val) [32][43]	mAP@0.5IOU: 0.4672
+2024-08-19 17:36:48,485 - mmaction - INFO - Saving checkpoint at 33 epochs
+2024-08-19 17:36:57,704 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:36:57,788 - mmaction - INFO - 
+mAP@0.5IOU	 0.4663
+2024-08-19 17:36:57,789 - mmaction - INFO - Epoch(val) [33][43]	mAP@0.5IOU: 0.4663
+2024-08-19 17:37:10,254 - mmaction - INFO - Saving checkpoint at 34 epochs
+2024-08-19 17:37:19,047 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:37:19,110 - mmaction - INFO - 
+mAP@0.5IOU	 0.4676
+2024-08-19 17:37:19,112 - mmaction - INFO - Epoch(val) [34][43]	mAP@0.5IOU: 0.4676
+2024-08-19 17:37:31,516 - mmaction - INFO - Saving checkpoint at 35 epochs
+2024-08-19 17:37:40,176 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:37:40,236 - mmaction - INFO - 
+mAP@0.5IOU	 0.4668
+2024-08-19 17:37:40,238 - mmaction - INFO - Epoch(val) [35][43]	mAP@0.5IOU: 0.4668
+2024-08-19 17:37:52,344 - mmaction - INFO - Saving checkpoint at 36 epochs
+2024-08-19 17:38:01,964 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:38:02,027 - mmaction - INFO - 
+mAP@0.5IOU	 0.4675
+2024-08-19 17:38:02,028 - mmaction - INFO - Epoch(val) [36][43]	mAP@0.5IOU: 0.4675
+2024-08-19 17:38:14,310 - mmaction - INFO - Saving checkpoint at 37 epochs
+2024-08-19 17:38:22,914 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:38:22,979 - mmaction - INFO - 
+mAP@0.5IOU	 0.4669
+2024-08-19 17:38:22,980 - mmaction - INFO - Epoch(val) [37][43]	mAP@0.5IOU: 0.4669
+2024-08-19 17:38:35,310 - mmaction - INFO - Saving checkpoint at 38 epochs
+2024-08-19 17:38:44,433 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:38:44,513 - mmaction - INFO - 
+mAP@0.5IOU	 0.4659
+2024-08-19 17:38:44,515 - mmaction - INFO - Epoch(val) [38][43]	mAP@0.5IOU: 0.4659
+2024-08-19 17:38:57,724 - mmaction - INFO - Saving checkpoint at 39 epochs
+2024-08-19 17:39:07,648 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:39:07,712 - mmaction - INFO - 
+mAP@0.5IOU	 0.4679
+2024-08-19 17:39:07,714 - mmaction - INFO - Epoch(val) [39][43]	mAP@0.5IOU: 0.4679
+2024-08-19 17:39:20,226 - mmaction - INFO - Saving checkpoint at 40 epochs
+2024-08-19 17:39:29,533 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:39:29,595 - mmaction - INFO - 
+mAP@0.5IOU	 0.4674
+2024-08-19 17:39:29,597 - mmaction - INFO - Epoch(val) [40][43]	mAP@0.5IOU: 0.4674
+2024-08-19 17:39:41,838 - mmaction - INFO - Saving checkpoint at 41 epochs
+2024-08-19 17:39:50,425 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:39:50,484 - mmaction - INFO - 
+mAP@0.5IOU	 0.4675
+2024-08-19 17:39:50,486 - mmaction - INFO - Epoch(val) [41][43]	mAP@0.5IOU: 0.4675
+2024-08-19 17:40:02,857 - mmaction - INFO - Saving checkpoint at 42 epochs
+2024-08-19 17:40:12,326 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:40:12,387 - mmaction - INFO - 
+mAP@0.5IOU	 0.4675
+2024-08-19 17:40:12,390 - mmaction - INFO - Epoch(val) [42][43]	mAP@0.5IOU: 0.4675
+2024-08-19 17:40:24,795 - mmaction - INFO - Saving checkpoint at 43 epochs
+2024-08-19 17:40:33,296 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:40:33,350 - mmaction - INFO - 
+mAP@0.5IOU	 0.4659
+2024-08-19 17:40:33,351 - mmaction - INFO - Epoch(val) [43][43]	mAP@0.5IOU: 0.4659
+2024-08-19 17:40:45,754 - mmaction - INFO - Saving checkpoint at 44 epochs
+2024-08-19 17:40:54,913 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:40:54,940 - mmaction - INFO - 
+mAP@0.5IOU	 0.4662
+2024-08-19 17:40:54,941 - mmaction - INFO - Epoch(val) [44][43]	mAP@0.5IOU: 0.4662
+2024-08-19 17:41:07,966 - mmaction - INFO - Saving checkpoint at 45 epochs
+2024-08-19 17:41:16,639 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:41:16,667 - mmaction - INFO - 
+mAP@0.5IOU	 0.4662
+2024-08-19 17:41:16,668 - mmaction - INFO - Epoch(val) [45][43]	mAP@0.5IOU: 0.4662
+2024-08-19 17:41:29,451 - mmaction - INFO - Saving checkpoint at 46 epochs
+2024-08-19 17:41:38,223 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:41:38,251 - mmaction - INFO - 
+mAP@0.5IOU	 0.4676
+2024-08-19 17:41:38,252 - mmaction - INFO - Epoch(val) [46][43]	mAP@0.5IOU: 0.4676
+2024-08-19 17:41:50,974 - mmaction - INFO - Saving checkpoint at 47 epochs
+2024-08-19 17:41:59,632 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:41:59,660 - mmaction - INFO - 
+mAP@0.5IOU	 0.4672
+2024-08-19 17:41:59,661 - mmaction - INFO - Epoch(val) [47][43]	mAP@0.5IOU: 0.4672
+2024-08-19 17:42:12,447 - mmaction - INFO - Saving checkpoint at 48 epochs
+2024-08-19 17:42:21,070 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:42:21,096 - mmaction - INFO - 
+mAP@0.5IOU	 0.4692
+2024-08-19 17:42:21,097 - mmaction - INFO - Epoch(val) [48][43]	mAP@0.5IOU: 0.4692
+2024-08-19 17:42:33,881 - mmaction - INFO - Saving checkpoint at 49 epochs
+2024-08-19 17:42:42,490 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:42:42,519 - mmaction - INFO - 
+mAP@0.5IOU	 0.4689
+2024-08-19 17:42:42,520 - mmaction - INFO - Epoch(val) [49][43]	mAP@0.5IOU: 0.4689
+2024-08-19 17:42:55,237 - mmaction - INFO - Saving checkpoint at 50 epochs
+2024-08-19 17:43:03,862 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:43:03,889 - mmaction - INFO - 
+mAP@0.5IOU	 0.4684
+2024-08-19 17:43:03,891 - mmaction - INFO - Epoch(val) [50][43]	mAP@0.5IOU: 0.4684
+2024-08-19 17:43:16,657 - mmaction - INFO - Saving checkpoint at 51 epochs
+2024-08-19 17:43:25,234 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:43:25,264 - mmaction - INFO - 
+mAP@0.5IOU	 0.4681
+2024-08-19 17:43:25,265 - mmaction - INFO - Epoch(val) [51][43]	mAP@0.5IOU: 0.4681
+2024-08-19 17:43:38,005 - mmaction - INFO - Saving checkpoint at 52 epochs
+2024-08-19 17:43:46,619 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:43:46,649 - mmaction - INFO - 
+mAP@0.5IOU	 0.4681
+2024-08-19 17:43:46,649 - mmaction - INFO - Epoch(val) [52][43]	mAP@0.5IOU: 0.4681
+2024-08-19 17:43:59,341 - mmaction - INFO - Saving checkpoint at 53 epochs
+2024-08-19 17:44:08,207 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:44:08,235 - mmaction - INFO - 
+mAP@0.5IOU	 0.4683
+2024-08-19 17:44:08,236 - mmaction - INFO - Epoch(val) [53][43]	mAP@0.5IOU: 0.4683
+2024-08-19 17:44:21,085 - mmaction - INFO - Saving checkpoint at 54 epochs
+2024-08-19 17:44:30,288 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:44:30,360 - mmaction - INFO - 
+mAP@0.5IOU	 0.4696
+2024-08-19 17:44:30,362 - mmaction - INFO - Epoch(val) [54][43]	mAP@0.5IOU: 0.4696
+2024-08-19 17:44:44,088 - mmaction - INFO - Saving checkpoint at 55 epochs
+2024-08-19 17:44:53,808 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:44:53,888 - mmaction - INFO - 
+mAP@0.5IOU	 0.4684
+2024-08-19 17:44:53,892 - mmaction - INFO - Epoch(val) [55][43]	mAP@0.5IOU: 0.4684
+2024-08-19 17:45:07,419 - mmaction - INFO - Saving checkpoint at 56 epochs
+2024-08-19 17:45:17,750 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:45:17,817 - mmaction - INFO - 
+mAP@0.5IOU	 0.4687
+2024-08-19 17:45:17,818 - mmaction - INFO - Epoch(val) [56][43]	mAP@0.5IOU: 0.4687
+2024-08-19 17:45:31,477 - mmaction - INFO - Saving checkpoint at 57 epochs
+2024-08-19 17:45:40,914 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:45:40,982 - mmaction - INFO - 
+mAP@0.5IOU	 0.4694
+2024-08-19 17:45:40,985 - mmaction - INFO - Epoch(val) [57][43]	mAP@0.5IOU: 0.4694
+2024-08-19 17:45:54,926 - mmaction - INFO - Saving checkpoint at 58 epochs
+2024-08-19 17:46:04,306 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:46:04,383 - mmaction - INFO - 
+mAP@0.5IOU	 0.4698
+2024-08-19 17:46:04,384 - mmaction - INFO - Epoch(val) [58][43]	mAP@0.5IOU: 0.4698
+2024-08-19 17:46:16,869 - mmaction - INFO - Saving checkpoint at 59 epochs
+2024-08-19 17:46:25,601 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:46:25,676 - mmaction - INFO - 
+mAP@0.5IOU	 0.4690
+2024-08-19 17:46:25,677 - mmaction - INFO - Epoch(val) [59][43]	mAP@0.5IOU: 0.4690
+2024-08-19 17:46:38,419 - mmaction - INFO - Saving checkpoint at 60 epochs
+2024-08-19 17:46:48,201 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:46:48,253 - mmaction - INFO - 
+mAP@0.5IOU	 0.4699
+2024-08-19 17:46:48,255 - mmaction - INFO - Epoch(val) [60][43]	mAP@0.5IOU: 0.4699
+2024-08-19 17:47:00,727 - mmaction - INFO - Saving checkpoint at 61 epochs
+2024-08-19 17:47:10,634 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:47:10,697 - mmaction - INFO - 
+mAP@0.5IOU	 0.4698
+2024-08-19 17:47:10,700 - mmaction - INFO - Epoch(val) [61][43]	mAP@0.5IOU: 0.4698
+2024-08-19 17:47:23,598 - mmaction - INFO - Saving checkpoint at 62 epochs
+2024-08-19 17:47:32,373 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:47:32,440 - mmaction - INFO - 
+mAP@0.5IOU	 0.4704
+2024-08-19 17:47:32,442 - mmaction - INFO - Epoch(val) [62][43]	mAP@0.5IOU: 0.4704
+2024-08-19 17:47:44,990 - mmaction - INFO - Saving checkpoint at 63 epochs
+2024-08-19 17:47:53,497 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:47:53,584 - mmaction - INFO - 
+mAP@0.5IOU	 0.4693
+2024-08-19 17:47:53,585 - mmaction - INFO - Epoch(val) [63][43]	mAP@0.5IOU: 0.4693
+2024-08-19 17:48:06,045 - mmaction - INFO - Saving checkpoint at 64 epochs
+2024-08-19 17:48:14,863 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:48:14,954 - mmaction - INFO - 
+mAP@0.5IOU	 0.4700
+2024-08-19 17:48:14,956 - mmaction - INFO - Epoch(val) [64][43]	mAP@0.5IOU: 0.4700
+2024-08-19 17:48:27,596 - mmaction - INFO - Saving checkpoint at 65 epochs
+2024-08-19 17:48:36,659 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:48:36,731 - mmaction - INFO - 
+mAP@0.5IOU	 0.4699
+2024-08-19 17:48:36,732 - mmaction - INFO - Epoch(val) [65][43]	mAP@0.5IOU: 0.4699
+2024-08-19 17:48:50,106 - mmaction - INFO - Saving checkpoint at 66 epochs
+2024-08-19 17:48:58,995 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:48:59,023 - mmaction - INFO - 
+mAP@0.5IOU	 0.4701
+2024-08-19 17:48:59,023 - mmaction - INFO - Epoch(val) [66][43]	mAP@0.5IOU: 0.4701
+2024-08-19 17:49:11,908 - mmaction - INFO - Saving checkpoint at 67 epochs
+2024-08-19 17:49:20,518 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:49:20,545 - mmaction - INFO - 
+mAP@0.5IOU	 0.4703
+2024-08-19 17:49:20,546 - mmaction - INFO - Epoch(val) [67][43]	mAP@0.5IOU: 0.4703
+2024-08-19 17:49:33,374 - mmaction - INFO - Saving checkpoint at 68 epochs
+2024-08-19 17:49:42,098 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:49:42,123 - mmaction - INFO - 
+mAP@0.5IOU	 0.4702
+2024-08-19 17:49:42,125 - mmaction - INFO - Epoch(val) [68][43]	mAP@0.5IOU: 0.4702
+2024-08-19 17:49:55,748 - mmaction - INFO - Saving checkpoint at 69 epochs
+2024-08-19 17:50:05,712 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:50:05,781 - mmaction - INFO - 
+mAP@0.5IOU	 0.4712
+2024-08-19 17:50:05,782 - mmaction - INFO - Epoch(val) [69][43]	mAP@0.5IOU: 0.4712
+2024-08-19 17:50:19,378 - mmaction - INFO - Saving checkpoint at 70 epochs
+2024-08-19 17:50:28,636 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:50:28,703 - mmaction - INFO - 
+mAP@0.5IOU	 0.4711
+2024-08-19 17:50:28,703 - mmaction - INFO - Epoch(val) [70][43]	mAP@0.5IOU: 0.4711
+2024-08-19 17:50:42,024 - mmaction - INFO - Saving checkpoint at 71 epochs
+2024-08-19 17:50:51,157 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:50:51,229 - mmaction - INFO - 
+mAP@0.5IOU	 0.4727
+2024-08-19 17:50:51,234 - mmaction - INFO - Epoch(val) [71][43]	mAP@0.5IOU: 0.4727
+2024-08-19 17:51:04,559 - mmaction - INFO - Saving checkpoint at 72 epochs
+2024-08-19 17:51:13,815 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:51:13,876 - mmaction - INFO - 
+mAP@0.5IOU	 0.4713
+2024-08-19 17:51:13,876 - mmaction - INFO - Epoch(val) [72][43]	mAP@0.5IOU: 0.4713
+2024-08-19 17:51:27,112 - mmaction - INFO - Saving checkpoint at 73 epochs
+2024-08-19 17:51:37,610 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:51:37,690 - mmaction - INFO - 
+mAP@0.5IOU	 0.4726
+2024-08-19 17:51:37,692 - mmaction - INFO - Epoch(val) [73][43]	mAP@0.5IOU: 0.4726
+2024-08-19 17:51:50,644 - mmaction - INFO - Saving checkpoint at 74 epochs
+2024-08-19 17:51:59,353 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:51:59,384 - mmaction - INFO - 
+mAP@0.5IOU	 0.4725
+2024-08-19 17:51:59,385 - mmaction - INFO - Epoch(val) [74][43]	mAP@0.5IOU: 0.4725
+2024-08-19 17:52:12,272 - mmaction - INFO - Saving checkpoint at 75 epochs
+2024-08-19 17:52:20,866 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:52:20,897 - mmaction - INFO - 
+mAP@0.5IOU	 0.4725
+2024-08-19 17:52:20,898 - mmaction - INFO - Epoch(val) [75][43]	mAP@0.5IOU: 0.4725
+2024-08-19 17:52:33,780 - mmaction - INFO - Saving checkpoint at 76 epochs
+2024-08-19 17:52:42,404 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:52:42,438 - mmaction - INFO - 
+mAP@0.5IOU	 0.4725
+2024-08-19 17:52:42,438 - mmaction - INFO - Epoch(val) [76][43]	mAP@0.5IOU: 0.4725
+2024-08-19 17:52:55,336 - mmaction - INFO - Saving checkpoint at 77 epochs
+2024-08-19 17:53:03,941 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:53:03,974 - mmaction - INFO - 
+mAP@0.5IOU	 0.4725
+2024-08-19 17:53:03,975 - mmaction - INFO - Epoch(val) [77][43]	mAP@0.5IOU: 0.4725
+2024-08-19 17:53:16,856 - mmaction - INFO - Saving checkpoint at 78 epochs
+2024-08-19 17:53:25,528 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:53:25,559 - mmaction - INFO - 
+mAP@0.5IOU	 0.4717
+2024-08-19 17:53:25,559 - mmaction - INFO - Epoch(val) [78][43]	mAP@0.5IOU: 0.4717
+2024-08-19 17:53:38,387 - mmaction - INFO - Saving checkpoint at 79 epochs
+2024-08-19 17:53:47,072 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:53:47,098 - mmaction - INFO - 
+mAP@0.5IOU	 0.4725
+2024-08-19 17:53:47,100 - mmaction - INFO - Epoch(val) [79][43]	mAP@0.5IOU: 0.4725
+2024-08-19 17:53:59,992 - mmaction - INFO - Saving checkpoint at 80 epochs
+2024-08-19 17:54:08,628 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:54:08,656 - mmaction - INFO - 
+mAP@0.5IOU	 0.4727
+2024-08-19 17:54:08,657 - mmaction - INFO - Epoch(val) [80][43]	mAP@0.5IOU: 0.4727
+2024-08-19 17:54:21,524 - mmaction - INFO - Saving checkpoint at 81 epochs
+2024-08-19 17:54:30,073 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:54:30,100 - mmaction - INFO - 
+mAP@0.5IOU	 0.4726
+2024-08-19 17:54:30,100 - mmaction - INFO - Epoch(val) [81][43]	mAP@0.5IOU: 0.4726
+2024-08-19 17:54:43,011 - mmaction - INFO - Saving checkpoint at 82 epochs
+2024-08-19 17:54:51,589 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:54:51,618 - mmaction - INFO - 
+mAP@0.5IOU	 0.4728
+2024-08-19 17:54:51,620 - mmaction - INFO - Epoch(val) [82][43]	mAP@0.5IOU: 0.4728
+2024-08-19 17:55:04,765 - mmaction - INFO - Saving checkpoint at 83 epochs
+2024-08-19 17:55:13,385 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:55:13,417 - mmaction - INFO - 
+mAP@0.5IOU	 0.4725
+2024-08-19 17:55:13,418 - mmaction - INFO - Epoch(val) [83][43]	mAP@0.5IOU: 0.4725
+2024-08-19 17:55:26,284 - mmaction - INFO - Saving checkpoint at 84 epochs
+2024-08-19 17:55:34,865 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:55:34,892 - mmaction - INFO - 
+mAP@0.5IOU	 0.4723
+2024-08-19 17:55:34,893 - mmaction - INFO - Epoch(val) [84][43]	mAP@0.5IOU: 0.4723
+2024-08-19 17:55:47,911 - mmaction - INFO - Saving checkpoint at 85 epochs
+2024-08-19 17:55:56,524 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:55:56,551 - mmaction - INFO - 
+mAP@0.5IOU	 0.4727
+2024-08-19 17:55:56,552 - mmaction - INFO - Epoch(val) [85][43]	mAP@0.5IOU: 0.4727
+2024-08-19 17:56:09,408 - mmaction - INFO - Saving checkpoint at 86 epochs
+2024-08-19 17:56:18,008 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:56:18,040 - mmaction - INFO - 
+mAP@0.5IOU	 0.4745
+2024-08-19 17:56:18,040 - mmaction - INFO - Epoch(val) [86][43]	mAP@0.5IOU: 0.4745
+2024-08-19 17:56:30,886 - mmaction - INFO - Saving checkpoint at 87 epochs
+2024-08-19 17:56:39,491 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:56:39,522 - mmaction - INFO - 
+mAP@0.5IOU	 0.4744
+2024-08-19 17:56:39,522 - mmaction - INFO - Epoch(val) [87][43]	mAP@0.5IOU: 0.4744
+2024-08-19 17:56:52,412 - mmaction - INFO - Saving checkpoint at 88 epochs
+2024-08-19 17:57:01,026 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:57:01,052 - mmaction - INFO - 
+mAP@0.5IOU	 0.4724
+2024-08-19 17:57:01,054 - mmaction - INFO - Epoch(val) [88][43]	mAP@0.5IOU: 0.4724
+2024-08-19 17:57:13,962 - mmaction - INFO - Saving checkpoint at 89 epochs
+2024-08-19 17:57:22,543 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:57:22,574 - mmaction - INFO - 
+mAP@0.5IOU	 0.4743
+2024-08-19 17:57:22,574 - mmaction - INFO - Epoch(val) [89][43]	mAP@0.5IOU: 0.4743
+2024-08-19 17:57:35,433 - mmaction - INFO - Saving checkpoint at 90 epochs
+2024-08-19 17:57:44,050 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:57:44,082 - mmaction - INFO - 
+mAP@0.5IOU	 0.4718
+2024-08-19 17:57:44,083 - mmaction - INFO - Epoch(val) [90][43]	mAP@0.5IOU: 0.4718
+2024-08-19 17:57:56,904 - mmaction - INFO - Saving checkpoint at 91 epochs
+2024-08-19 17:58:05,497 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:58:05,525 - mmaction - INFO - 
+mAP@0.5IOU	 0.4738
+2024-08-19 17:58:05,526 - mmaction - INFO - Epoch(val) [91][43]	mAP@0.5IOU: 0.4738
+2024-08-19 17:58:18,394 - mmaction - INFO - Saving checkpoint at 92 epochs
+2024-08-19 17:58:26,967 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:58:26,994 - mmaction - INFO - 
+mAP@0.5IOU	 0.4737
+2024-08-19 17:58:26,994 - mmaction - INFO - Epoch(val) [92][43]	mAP@0.5IOU: 0.4737
+2024-08-19 17:58:39,805 - mmaction - INFO - Saving checkpoint at 93 epochs
+2024-08-19 17:58:48,555 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:58:48,583 - mmaction - INFO - 
+mAP@0.5IOU	 0.4746
+2024-08-19 17:58:48,583 - mmaction - INFO - Epoch(val) [93][43]	mAP@0.5IOU: 0.4746
+2024-08-19 17:59:01,458 - mmaction - INFO - Saving checkpoint at 94 epochs
+2024-08-19 17:59:10,185 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:59:10,211 - mmaction - INFO - 
+mAP@0.5IOU	 0.4738
+2024-08-19 17:59:10,213 - mmaction - INFO - Epoch(val) [94][43]	mAP@0.5IOU: 0.4738
+2024-08-19 17:59:23,160 - mmaction - INFO - Saving checkpoint at 95 epochs
+2024-08-19 17:59:31,807 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:59:31,833 - mmaction - INFO - 
+mAP@0.5IOU	 0.4746
+2024-08-19 17:59:31,834 - mmaction - INFO - Epoch(val) [95][43]	mAP@0.5IOU: 0.4746
+2024-08-19 17:59:44,679 - mmaction - INFO - Saving checkpoint at 96 epochs
+2024-08-19 17:59:53,290 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 17:59:53,333 - mmaction - INFO - 
+mAP@0.5IOU	 0.4731
+2024-08-19 17:59:53,333 - mmaction - INFO - Epoch(val) [96][43]	mAP@0.5IOU: 0.4731
+2024-08-19 18:00:06,193 - mmaction - INFO - Saving checkpoint at 97 epochs
+2024-08-19 18:00:14,774 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 18:00:14,803 - mmaction - INFO - 
+mAP@0.5IOU	 0.4732
+2024-08-19 18:00:14,804 - mmaction - INFO - Epoch(val) [97][43]	mAP@0.5IOU: 0.4732
+2024-08-19 18:00:27,706 - mmaction - INFO - Saving checkpoint at 98 epochs
+2024-08-19 18:00:36,349 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 18:00:36,374 - mmaction - INFO - 
+mAP@0.5IOU	 0.4728
+2024-08-19 18:00:36,374 - mmaction - INFO - Epoch(val) [98][43]	mAP@0.5IOU: 0.4728
+2024-08-19 18:00:49,250 - mmaction - INFO - Saving checkpoint at 99 epochs
+2024-08-19 18:00:57,872 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 18:00:57,899 - mmaction - INFO - 
+mAP@0.5IOU	 0.4732
+2024-08-19 18:00:57,899 - mmaction - INFO - Epoch(val) [99][43]	mAP@0.5IOU: 0.4732
+2024-08-19 18:01:10,752 - mmaction - INFO - Saving checkpoint at 100 epochs
+2024-08-19 18:01:19,315 - mmaction - INFO - Evaluating mAP ...
+2024-08-19 18:01:19,346 - mmaction - INFO - 
+mAP@0.5IOU	 0.4732
+2024-08-19 18:01:19,347 - mmaction - INFO - Epoch(val) [100][43]	mAP@0.5IOU: 0.4732
